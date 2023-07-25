@@ -75,17 +75,19 @@ async function createWeek(req, res) {
 async function DeleteWeek(req, res) {
   try {
     const weekNo = req.params.weekno;
-    console.log("weekno :",weekNo)
-  const da =   await Week.deleteOne({ week_number: weekNo });
-console.log("data :",da)
+    console.log("weekno :", weekNo);
+    const da = await Week.deleteOne({ week_number: weekNo });
+    console.log("data :", da);
     const data = await Week.updateMany(
       { week_number: { $gt: weekNo } },
       { $inc: { week_number: -1 } }, // Use $inc to decrement the week_number attribute by 1
       { multi: true }
     );
 
+    const weekss = await Week.find({}).sort({ week_number: 1 });
+
     return res.json({
-      weeks: data,
+      weeks: weekss,
     });
   } catch (err) {
     return res.json({
